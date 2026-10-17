@@ -92,8 +92,9 @@ takes the closed-form value. The medians above are over pixels where both are de
 
 - Any rendering by the OklchSV transform (paper Fig. 5 is reproduced by the arXiv
   ancillary script with illustrative constants, not by this repository).
-- The night renderings in the companion article (closed-form-driven vs spectral-driven
-  appearance). They need the transform, which is not public.
+- The night renderings in the companion article (Japanese, <https://zenn.dev/nekotrack/articles/b1ae1d1f778624>):
+  closed-form-driven vs spectral-driven appearance. They need the transform, which is
+  not public. The S/P map medians in that article are reproduced by `hsi_sp_maps.py`.
 
 ## Tests
 

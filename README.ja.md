@@ -19,6 +19,6 @@
 
 使い方・再現スクリプト・期待値は [README.md](README.md)（英語）を見てください。
 
-解説記事（Zenn）: <https://zenn.dev/nekotrack>
+解説記事（Zenn）: 「昼のRGB画像から“夜”をどこまで推定できるか？ — 分光データ利用との境界線」 <https://zenn.dev/nekotrack/articles/b1ae1d1f778624>
 
 ライセンス: MIT
