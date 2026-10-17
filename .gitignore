@@ -1,0 +1,9 @@
+# data are not redistributed (see data/README.md)
+data/*
+!data/README.md
+output/
+__pycache__/
+*.egg-info/
+build/
+dist/
+.venv/

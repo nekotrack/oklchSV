@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# byte-identical copy of the arXiv ancillary file
+scripts/oklchsv_scotopic_reconcile.py -text

@@ -1,0 +1,23 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite the paper below."
+title: "OklchSV: closed-form and spectral S/P ratio"
+type: software
+authors:
+  - name: nekotrack
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/nekotrack/oklchSV"
+preferred-citation:
+  type: article
+  title: "When is a closed-form RGB->S/P ratio adequate? A hyperspectral characterization on natural scenes for mesopic display"
+  authors:
+    - given-names: Naoyuki
+      family-names: Uchida
+  year: 2026
+  month: 9
+  doi: "10.48550/arXiv.2609.24819"
+  url: "https://arxiv.org/abs/2609.24819"
+  identifiers:
+    - type: other
+      value: "arXiv:2609.24819"
+      description: arXiv preprint
