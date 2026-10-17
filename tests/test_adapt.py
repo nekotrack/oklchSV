@@ -47,6 +47,31 @@ class TestAdapt(unittest.TestCase):
         rgb = adapt.xyz_to_linear_srgb(adapt.adapt_to_d65(w, w))
         np.testing.assert_allclose(rgb, [1, 1, 1], atol=2e-4)
 
+    def test_srgb_decode_known_values(self):
+        lin = adapt.srgb_to_linear([0.0, 0.04045, 0.5, 1.0])
+        np.testing.assert_allclose(lin, [0.0, 0.04045 / 12.92, 0.21404114, 1.0],
+                                   rtol=1e-7)
+        # 8-bit mid grey 128/255 -> about 0.2159
+        self.assertAlmostEqual(float(adapt.srgb_to_linear(128 / 255)), 0.2158605,
+                               places=6)
+
+    def test_srgb_decode_round_trip(self):
+        x = np.linspace(0, 1, 101)
+        np.testing.assert_allclose(adapt.linear_to_srgb(adapt.srgb_to_linear(x)),
+                                   x, atol=1e-12)
+
+    def test_srgb_white_and_grey_sp_is_one(self):
+        from oklchsv import sp_closed_form
+        for v in (1.0, 0.5, 0.1):
+            s, _ = sp_closed_form(adapt.srgb_to_linear([v, v, v]))
+            self.assertAlmostEqual(float(s), 1.0, places=12)
+
+    @unittest.skipIf(colour is None, "colour-science not installed")
+    def test_srgb_decode_matches_colour_science(self):
+        x = np.random.default_rng(3).uniform(0, 1, (50, 3))
+        ref = colour.models.eotf_sRGB(x)
+        np.testing.assert_allclose(adapt.srgb_to_linear(x), ref, atol=1e-12)
+
     @unittest.skipIf(colour is None, "colour-science not installed")
     def test_matches_colour_science(self):
         d65 = colour.xy_to_XYZ(

@@ -27,12 +27,16 @@ Python 3.10 or later.
 
 ## Use
 
+An ordinary 8-bit sRGB image (Pillow is only used for reading the file here):
+
 ```python
 import numpy as np
-from oklchsv import sp_closed_form, adapt_to_d65, xyz_to_linear_srgb
+from PIL import Image
+from oklchsv import srgb_to_linear, sp_closed_form
 
-rgb = np.array([[0.2, 0.4, 0.8], [1.0, 1.0, 1.0]])   # linear sRGB, D65
-sp, ok = sp_closed_form(rgb)                          # white -> 1.0
+img = np.asarray(Image.open("photo.jpg").convert("RGB")) / 255.0   # encoded sRGB
+rgb = srgb_to_linear(img)            # decode the gamma first
+sp, ok = sp_closed_form(rgb)         # (H, W) S/P map; white and greys -> 1.0
 ```
 
 $$
@@ -40,11 +44,15 @@ S/P = \frac{(R,G,B)\cdot Y'_p \,/\, \textstyle\sum Y'_p}{(R,G,B)\cdot Y_p},\qqua
 Y_p = (0.2126,\ 0.7152,\ 0.0722),\quad Y'_p = (0.0184,\ 0.5673,\ 0.3498)
 $$
 
-The input must be **linear** sRGB (not gamma-encoded) **adapted to D65**
-(paper condition C2). For a scene under another illuminant, adapt first:
+The input must be **linear** sRGB (not gamma-encoded; use `srgb_to_linear`)
+**adapted to D65** (paper condition C2). Ordinary photographs and museum images
+that are white-balanced can be treated as D65-adapted. For a scene under another
+illuminant, adapt first:
 
 ```python
-rgb = xyz_to_linear_srgb(adapt_to_d65(XYZ, white_XYZ))
+from oklchsv import adapt_to_d65, linear_srgb_to_xyz, xyz_to_linear_srgb
+
+rgb = xyz_to_linear_srgb(adapt_to_d65(linear_srgb_to_xyz(rgb), white_XYZ))
 ```
 
 The spectral S/P (`sp_spectral`) needs the CIE tables, which are not bundled.

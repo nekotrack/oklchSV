@@ -1,4 +1,4 @@
-"""Linear sRGB <-> XYZ and Bradford chromatic adaptation to D65.
+"""sRGB decoding, linear sRGB <-> XYZ, and Bradford chromatic adaptation to D65.
 
 The closed-form S/P assumes linear sRGB adapted to the D65 white
 (arXiv:2609.24819, condition C2). For a scene under another illuminant,
@@ -32,6 +32,22 @@ def xy_to_XYZ(xy, Y=1.0):
 
 
 D65_XYZ = xy_to_XYZ(D65_XY)
+
+
+def srgb_to_linear(srgb):
+    """Gamma-encoded sRGB in [0, 1] (..., 3) -> linear sRGB (IEC 61966-2-1).
+
+    Ordinary 8-bit images: divide by 255 first. The S/P functions expect the
+    linear values returned here, not the encoded ones.
+    """
+    c = np.asarray(srgb, dtype=float)
+    return np.where(c <= 0.04045, c / 12.92, ((c + 0.055) / 1.055) ** 2.4)
+
+
+def linear_to_srgb(rgb):
+    """Linear sRGB (..., 3) -> gamma-encoded sRGB. Clipped to [0, 1]."""
+    c = np.clip(np.asarray(rgb, dtype=float), 0.0, 1.0)
+    return np.where(c <= 0.0031308, 12.92 * c, 1.055 * c ** (1.0 / 2.4) - 0.055)
 
 
 def xyz_to_linear_srgb(XYZ):
